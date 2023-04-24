@@ -7,7 +7,6 @@ import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import javax.validation.Valid;
-import java.time.LocalDate;
 import java.util.*;
 
 @Slf4j
@@ -24,15 +23,6 @@ public class UserController {
 
     @PostMapping
     public User create(@Valid @RequestBody User user) {
-//        if (user.getEmail() == null || !(user.getEmail().contains("@"))) {
-//            throw new ValidationException("Поле email не должно быть пустым и должно содержать символ \"@\"");
-//        }
-//        if (user.getLogin() == null || user.getLogin().contains(" ")) {
-//            throw new ValidationException("Логин не может быть пустым или содержать пробелы!");
-//        }
-//        if (user.getBirthday().isAfter(LocalDate.now())) {
-//            throw new ValidationException("Дата рождение не может быть в будущем!");
-//        }
         if (user.getName() == null || user.getName().isBlank()) {
             user.setName(user.getLogin());
         }
@@ -52,18 +42,6 @@ public class UserController {
         if (!users.containsKey(user.getId())) {
             throw new ValidationException("Пользователь с id " + user.getId() + " отсутствует!");
         }
-//        if (user.getEmail() == null || !(user.getEmail().contains("@"))) {
-//            throw new ValidationException("Поле email не должно быть пустым и должно содержать символ \"@\"");
-//        }
-//        if (user.getLogin() == null || user.getLogin().contains(" ")) {
-//            throw new ValidationException("Логин не может быть пустым или содержать пробелы!");
-//        }
-//        if (user.getBirthday().isAfter(LocalDate.now())) {
-//            throw new ValidationException("Дата рождение не может быть в будущем!");
-//        }
-//        if (user.getName() == null || user.getName().isBlank()) {
-//            user.setName(user.getLogin());
-//        }
         log.info("Пользователь с логином {} с id - {} обновлен!", user.getLogin(), user.getId());
         users.put(user.getId(), user);
         return user;

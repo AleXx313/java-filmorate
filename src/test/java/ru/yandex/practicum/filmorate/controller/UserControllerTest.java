@@ -1,11 +1,18 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -13,6 +20,13 @@ public class UserControllerTest {
 
     private UserController controller;
     private User user;
+    private static Validator validator;
+
+    @BeforeAll
+    public static void validatorInit() {
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        validator = factory.getValidator();
+    }
 
     @BeforeEach
     public void init() {
@@ -87,30 +101,42 @@ public class UserControllerTest {
         assertFalse(controller.findAll().isEmpty());
     }
 
-//    @Test
-//    public void shouldThrowExceptionIfValidationNotPassed() {
-//        user = user.toBuilder().email(null).build();
-//        ValidationException e = assertThrows(ValidationException.class, () -> controller.create(user));
-//        assertEquals(e.getMessage(), "Поле email не должно быть пустым и должно содержать символ \"@\"");
-//        user = user.toBuilder().email("null.ru").build();
-//        e = assertThrows(ValidationException.class, () -> controller.create(user));
-//        assertEquals(e.getMessage(), "Поле email не должно быть пустым и должно содержать символ \"@\"");
-//        user = user.toBuilder().email("null@yandex.ru").login(null).build();
-//        e = assertThrows(ValidationException.class, () -> controller.create(user));
-//        assertEquals(e.getMessage(), "Логин не может быть пустым или содержать пробелы!");
-//        user = user.toBuilder().login("nu ll").build();
-//        e = assertThrows(ValidationException.class, () -> controller.create(user));
-//        assertEquals(e.getMessage(), "Логин не может быть пустым или содержать пробелы!");
-//        user = user.toBuilder().login("Login")
-//                .birthday(LocalDate.of(2077, 10, 10))
-//                .build();
-//        e = assertThrows(ValidationException.class, () -> controller.create(user));
-//        assertEquals(e.getMessage(), "Дата рождение не может быть в будущем!");
-//        user = user.toBuilder()
-//                .id(1)
-//                .birthday(LocalDate.of(2000, 10, 10))
-//                .build();
-//        e = assertThrows(ValidationException.class, () -> controller.update(user));
-//        assertEquals(e.getMessage(), "Пользователь с id 1 отсутствует!");
-//    }
+    @Test
+    public void testEmailValidation() {
+        user = user.toBuilder().email("definitely not email").build();
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
+        assertFalse(violations.isEmpty());
+        assertEquals("Введенная строка не является email!", violations.iterator().next().getMessage());
+    }
+
+    @Test
+    public void testEmailNotNullValidation() {
+        user = user.toBuilder().email(null).build();
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
+        assertFalse(violations.isEmpty());
+        assertEquals("Email не может быть null!", violations.iterator().next().getMessage());
+    }
+
+    @Test
+    public void testLoginValidation() {
+        user = user.toBuilder().login("").build();
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
+        assertFalse(violations.isEmpty());
+        assertEquals("Логин не может быть пустым!", violations.iterator().next().getMessage());
+    }
+
+    @Test
+    public void testBirthdayValidation() {
+        user = user.toBuilder().birthday(LocalDate.of(2077, 10, 10)).build();
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
+        assertFalse(violations.isEmpty());
+        assertEquals("День рождения не может быть в будущем!", violations.iterator().next().getMessage());
+    }
+
+    @Test
+    public void shouldThrowValidationExceptionIfNoUserToUpdate() {
+        user = user.toBuilder().id(1).build();
+        ValidationException e = assertThrows(ValidationException.class, () -> controller.update(user));
+        assertEquals(e.getMessage(), "Пользователь с id 1 отсутствует!");
+    }
 }
