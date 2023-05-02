@@ -16,11 +16,13 @@ public class ErrorHandler {
     public ErrorResponse handleModelNotFoundException(final ModelNotFoundException e) {
         return new ErrorResponse("Данные для обновления отсутствуют!", e.getMessage());
     }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleValidationException(final MethodArgumentNotValidException e) {
         return new ErrorResponse("Передан некорректный объект!", e.getMessage());
     }
+
     @ExceptionHandler(IncorrectPathVariableException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleIncorrectParameterException(final IncorrectPathVariableException e) {
@@ -33,6 +35,7 @@ public class ErrorHandler {
         return new ErrorResponse("Непредвиденная ошибка!", e.getMessage());
     }
 }
+
 class ErrorResponse {
 
     private String error;
