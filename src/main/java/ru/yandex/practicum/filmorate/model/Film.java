@@ -9,11 +9,14 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Builder(toBuilder = true)
 public class Film {
     private int id;
+    private final Set<Integer> likes = new HashSet<>();
     @NotBlank(message = "Название фильма не может быть пустым!")
     private final String name;
     @Size(min = 0, max = 200, message = "Описание фильма не должно превышать 200 символов!")

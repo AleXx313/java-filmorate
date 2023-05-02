@@ -2,9 +2,10 @@ package ru.yandex.practicum.filmorate.controller;
 
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
 
 import javax.validation.Valid;
 import java.util.*;
@@ -13,37 +14,80 @@ import java.util.*;
 @RestController
 @RequestMapping("/users")
 public class UserController {
-    private int id = 1;
-    private final Map<Integer, User> users = new HashMap<>();
+
+    private final UserService userService;
+
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping
+    @ResponseBody
     public List<User> findAll() {
-        return new ArrayList<>(users.values());
+        return userService.findAll();
+    }
+
+    @GetMapping("/{id}")
+    @ResponseBody
+    public User getUser(@PathVariable(value = "id") Integer id){
+        if (id != null){
+            return userService.getUser(id);
+        } else {
+            throw new RuntimeException("Неверный параметр запроса!");
+        }
     }
 
     @PostMapping
+    @ResponseBody
     public User create(@Valid @RequestBody User user) {
-        if (user.getName() == null || user.getName().isBlank()) {
-            user.setName(user.getLogin());
-        }
-        if (user.getId() == 0) {
-            user.setId(id);
-            id++;
-            log.info("Пользователь с логином {} с id - {} добавлен!", user.getLogin(), user.getId());
-        } else {
-            log.info("Пользователь с логином {} с id - {} обновлен!", user.getLogin(), user.getId());
-        }
-        users.put(user.getId(), user);
-        return user;
+        return userService.create(user);
     }
 
     @PutMapping
+    @ResponseBody
     public User update(@Valid @RequestBody User user) {
-        if (!users.containsKey(user.getId())) {
-            throw new ValidationException("Пользователь с id " + user.getId() + " отсутствует!");
+        return userService.update(user);
+    }
+
+    @PutMapping("/{id}/friends/{friendId}") //PUT /users/{id}/friends/{friendId}
+    public void addFriends(@PathVariable(value = "id") Integer id,
+                           @PathVariable(value = "friendId") Integer friendId) {
+        if (id != null && friendId != null) {
+            userService. addFriends(id, friendId);
+        } else {
+            throw new RuntimeException("Неверный параметр запроса!");
         }
-        log.info("Пользователь с логином {} с id - {} обновлен!", user.getLogin(), user.getId());
-        users.put(user.getId(), user);
-        return user;
+    }
+
+    @DeleteMapping("/{id}/friends/{friendId}") //DELETE /users/{id}/friends/{friendId}
+    public void deleteFriends(@PathVariable(value = "id") Integer id,
+                              @PathVariable(value = "friendId") Integer friendId) {
+        if (id != null && friendId != null) {
+            userService.deleteFriends(id, friendId);
+        } else {
+            throw new RuntimeException("Неверный параметр запроса!");
+        }
+    }
+
+    @GetMapping("/{id}/friends")//GET /users/{id}/friends
+    @ResponseBody
+    public List<User> getFriend(@PathVariable(value = "id") Integer id) {
+        if (id != null) {
+            return userService.getFriends(id);
+        } else {
+            throw new RuntimeException("Неверный параметр запроса!");
+        }
+    }
+
+    @GetMapping("/{id}/friends/common/{otherId}")//GET /users/{id}/friends/common/{otherId}
+    @ResponseBody
+    public List<User> getCommonFriends(@PathVariable(value = "id") Integer id,
+                                       @PathVariable(value = "otherId") Integer otherId) {
+        if (id != null && otherId != null) {
+            return userService.getCommonFriends(id, otherId);
+        } else {
+            throw new RuntimeException("Неверный параметр запроса!");
+        }
     }
 }

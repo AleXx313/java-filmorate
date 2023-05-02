@@ -3,8 +3,10 @@ package ru.yandex.practicum.filmorate.controller;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
+import ru.yandex.practicum.filmorate.exception.ModelNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -30,7 +32,7 @@ public class UserControllerTest {
 
     @BeforeEach
     public void init() {
-        controller = new UserController();
+        controller = new UserController(new UserService(new InMemoryUserStorage()));
         user = User.builder()
                 .email("email@email.ru")
                 .login("Login")
@@ -136,7 +138,7 @@ public class UserControllerTest {
     @Test
     public void shouldThrowValidationExceptionIfNoUserToUpdate() {
         user = user.toBuilder().id(1).build();
-        ValidationException e = assertThrows(ValidationException.class, () -> controller.update(user));
+        ModelNotFoundException e = assertThrows(ModelNotFoundException.class, () -> controller.update(user));
         assertEquals(e.getMessage(), "Пользователь с id 1 отсутствует!");
     }
 }

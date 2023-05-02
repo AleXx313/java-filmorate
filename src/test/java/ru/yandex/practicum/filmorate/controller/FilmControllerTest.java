@@ -5,8 +5,11 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import ru.yandex.practicum.filmorate.exception.ValidationException;
+import ru.yandex.practicum.filmorate.exception.ModelNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -32,7 +35,7 @@ public class FilmControllerTest {
 
     @BeforeEach
     void init() {
-        controller = new FilmController();
+        controller = new FilmController(new FilmService(new InMemoryFilmStorage(), new InMemoryUserStorage()));
         film = Film.builder()
                 .name("Film")
                 .description("Film description")
@@ -146,7 +149,7 @@ public class FilmControllerTest {
     @Test
     public void shouldThrowValidationExceptionIfNoFilmToUpdate() {
         film = film.toBuilder().id(1).build();
-        ValidationException e = assertThrows(ValidationException.class, () -> controller.update(film));
+        ModelNotFoundException e = assertThrows(ModelNotFoundException.class, () -> controller.update(film));
         assertEquals(e.getMessage(), "Фильм с id 1 отсутствует!");
     }
 }
