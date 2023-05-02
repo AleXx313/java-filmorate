@@ -10,8 +10,12 @@ import java.util.List;
 public interface UserStorage {
 
     User create(User user);
+
     User update(User user);
+
     User delete(int id);
+
     User get(int id);
+
     List<User> getAll();
 }

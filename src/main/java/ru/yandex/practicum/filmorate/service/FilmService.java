@@ -29,7 +29,7 @@ public class FilmService {
         return filmStorage.getAll();
     }
 
-    public Film getFilm(int id){
+    public Film getFilm(int id) {
         if (filmStorage.get(id) == null) {
             throw new ModelNotFoundException("Фильм с id " + id + " отсутствует!");
         }

@@ -30,8 +30,8 @@ public class UserController {
 
     @GetMapping("/{id}")
     @ResponseBody
-    public User getUser(@PathVariable(value = "id") Integer id){
-        if (id != null){
+    public User getUser(@PathVariable(value = "id") Integer id) {
+        if (id != null) {
             return userService.getUser(id);
         } else {
             throw new RuntimeException("Неверный параметр запроса!");
@@ -54,7 +54,7 @@ public class UserController {
     public void addFriends(@PathVariable(value = "id") Integer id,
                            @PathVariable(value = "friendId") Integer friendId) {
         if (id != null && friendId != null) {
-            userService. addFriends(id, friendId);
+            userService.addFriends(id, friendId);
         } else {
             throw new RuntimeException("Неверный параметр запроса!");
         }

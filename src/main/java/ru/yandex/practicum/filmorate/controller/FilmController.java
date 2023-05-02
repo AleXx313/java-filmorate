@@ -28,8 +28,8 @@ public class FilmController {
 
     @GetMapping("/{id}")
     @ResponseBody
-    public Film getFilm(@PathVariable(value = "id") Integer id){
-        if (id != null){
+    public Film getFilm(@PathVariable(value = "id") Integer id) {
+        if (id != null) {
             return filmService.getFilm(id);
         } else {
             throw new RuntimeException("Неверный параметр запроса!");

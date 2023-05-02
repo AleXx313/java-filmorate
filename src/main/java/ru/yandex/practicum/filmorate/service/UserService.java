@@ -59,10 +59,10 @@ public class UserService {
     public void addFriends(int userId1, int userId2) {
         User friend1 = userStorage.get(userId1);
         User friend2 = userStorage.get(userId2);
-        if (friend1 == null){
+        if (friend1 == null) {
             throw new ModelNotFoundException("Пользователь с id " + userId1 + " отсутствует!");
         }
-        if (friend2 == null){
+        if (friend2 == null) {
             throw new ModelNotFoundException("Пользователь с id " + userId2 + " отсутствует!");
         }
         friend1.getFriends().add(userId2);

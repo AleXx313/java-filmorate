@@ -6,13 +6,14 @@ import ru.yandex.practicum.filmorate.model.User;
 import java.util.*;
 
 @Component
-public class InMemoryUserStorage implements UserStorage{
+public class InMemoryUserStorage implements UserStorage {
 
     private final Map<Integer, User> users;
 
-    public InMemoryUserStorage(){
+    public InMemoryUserStorage() {
         users = new HashMap<>();
     }
+
     @Override
     public User create(User user) {
         users.put(user.getId(), user);
