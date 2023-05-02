@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.yandex.practicum.filmorate.exception.IncorrectPathVariableException;
 import ru.yandex.practicum.filmorate.exception.ModelNotFoundException;
+import ru.yandex.practicum.filmorate.model.ErrorResponse;
 
 @RestControllerAdvice
 public class ErrorHandler {
@@ -33,24 +34,5 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleException(final Exception e) {
         return new ErrorResponse("Непредвиденная ошибка!", e.getMessage());
-    }
-}
-
-class ErrorResponse {
-
-    private String error;
-    private String description;
-
-    public ErrorResponse(String error, String description) {
-        this.error = error;
-        this.description = description;
-    }
-
-    public String getError() {
-        return error;
-    }
-
-    public String getDescription() {
-        return description;
     }
 }
