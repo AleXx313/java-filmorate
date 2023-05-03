@@ -8,6 +8,8 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.NotNull;
 import java.util.*;
 
 @Slf4j
@@ -30,12 +32,8 @@ public class UserController {
 
     @GetMapping("/{id}")
     @ResponseBody
-    public User getUser(@PathVariable(value = "id") Integer id) {
-        if (id != null) {
-            return userService.getUser(id);
-        } else {
-            throw new RuntimeException("Неверный параметр запроса!");
-        }
+    public User getUser(@PathVariable(value = "id") @Positive @NotNull Integer id) {
+        return userService.getUser(id);
     }
 
     @PostMapping
@@ -51,43 +49,27 @@ public class UserController {
     }
 
     @PutMapping("/{id}/friends/{friendId}") //PUT /users/{id}/friends/{friendId}
-    public void addFriends(@PathVariable(value = "id") Integer id,
-                           @PathVariable(value = "friendId") Integer friendId) {
-        if (id != null && friendId != null) {
-            userService.addFriends(id, friendId);
-        } else {
-            throw new RuntimeException("Неверный параметр запроса!");
-        }
+    public void addFriends(@PathVariable(value = "id") @Positive @NotNull Integer id,
+                           @PathVariable(value = "friendId") @Positive @NotNull Integer friendId) {
+        userService.addFriends(id, friendId);
     }
 
     @DeleteMapping("/{id}/friends/{friendId}") //DELETE /users/{id}/friends/{friendId}
-    public void deleteFriends(@PathVariable(value = "id") Integer id,
-                              @PathVariable(value = "friendId") Integer friendId) {
-        if (id != null && friendId != null) {
-            userService.deleteFriends(id, friendId);
-        } else {
-            throw new RuntimeException("Неверный параметр запроса!");
-        }
+    public void deleteFriends(@PathVariable(value = "id") @Positive @NotNull Integer id,
+                              @PathVariable(value = "friendId") @Positive @NotNull Integer friendId) {
+        userService.deleteFriends(id, friendId);
     }
 
     @GetMapping("/{id}/friends")//GET /users/{id}/friends
     @ResponseBody
-    public List<User> getFriend(@PathVariable(value = "id") Integer id) {
-        if (id != null) {
-            return userService.getFriends(id);
-        } else {
-            throw new RuntimeException("Неверный параметр запроса!");
-        }
+    public List<User> getFriend(@PathVariable(value = "id") @Positive @NotNull Integer id) {
+        return userService.getFriends(id);
     }
 
     @GetMapping("/{id}/friends/common/{otherId}")//GET /users/{id}/friends/common/{otherId}
     @ResponseBody
-    public List<User> getCommonFriends(@PathVariable(value = "id") Integer id,
-                                       @PathVariable(value = "otherId") Integer otherId) {
-        if (id != null && otherId != null) {
-            return userService.getCommonFriends(id, otherId);
-        } else {
-            throw new RuntimeException("Неверный параметр запроса!");
-        }
+    public List<User> getCommonFriends(@PathVariable(value = "id") @Positive @NotNull Integer id,
+                                       @PathVariable(value = "otherId") @Positive @NotNull Integer otherId) {
+        return userService.getCommonFriends(id, otherId);
     }
 }

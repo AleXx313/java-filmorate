@@ -8,20 +8,27 @@ import java.util.*;
 @Component
 public class InMemoryFilmStorage implements FilmStorage {
 
+    private int id = 1;
     private final Map<Integer, Film> films;
 
     public InMemoryFilmStorage() {
         films = new HashMap<>();
     }
 
+    private void setFilmId(Film film) {
+        film.setId(id);
+        id++;
+    }
+
     @Override
     public Film create(Film film) {
+        setFilmId(film);
         films.put(film.getId(), film);
         return film;
     }
 
     @Override
-    public Film update(Film film) { //Одинаковые с create
+    public Film update(Film film) {
         films.put(film.getId(), film);
         return film;
     }

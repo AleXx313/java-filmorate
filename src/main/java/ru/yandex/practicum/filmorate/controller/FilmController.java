@@ -7,6 +7,8 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.util.*;
 
 @Slf4j
@@ -28,12 +30,8 @@ public class FilmController {
 
     @GetMapping("/{id}")
     @ResponseBody
-    public Film getFilm(@PathVariable(value = "id") Integer id) {
-        if (id != null) {
-            return filmService.getFilm(id);
-        } else {
-            throw new RuntimeException("Неверный параметр запроса!");
-        }
+    public Film getFilm(@PathVariable(value = "id") @Positive @NotNull Integer id) {
+        return filmService.getFilm(id);
     }
 
     @PostMapping
@@ -50,29 +48,21 @@ public class FilmController {
 
 
     @PutMapping("/{id}/like/{userId}")//PUT /films/{id}/like/{userId}
-    public void setLike(@PathVariable(value = "id") Integer id,
-                        @PathVariable(value = "userId") Integer userId) {
-        if (id != null && userId != null) {
-            filmService.setLikes(id, userId);
-        } else {
-            throw new RuntimeException("Неверный параметр запроса!");
-        }
+    public void setLike(@PathVariable(value = "id") @Positive @NotNull Integer id,
+                        @PathVariable(value = "userId") @Positive @NotNull Integer userId) {
+        filmService.setLikes(id, userId);
     }
 
     @DeleteMapping("/{id}/like/{userId}")//DELETE /films/{id}/like/{userId}
-    public void deleteLike(@PathVariable(value = "id") Integer id,
-                           @PathVariable(value = "userId") Integer userId) {
-        if (id != null && userId != null) {
-            filmService.removeLikes(id, userId);
-        } else {
-            throw new RuntimeException("Неверный параметр запроса!");
-        }
+    public void deleteLike(@PathVariable(value = "id") @Positive @NotNull Integer id,
+                           @PathVariable(value = "userId") @Positive @NotNull Integer userId) {
+        filmService.removeLikes(id, userId);
     }
 
     @GetMapping("/popular")//GET /films/popular?count={count}
     @ResponseBody
     public List<Film> getPopularFilms(@RequestParam(value = "count",
-            defaultValue = "10", required = false) @PathVariable(value = "count") Integer count) {
+            defaultValue = "10", required = false) @PathVariable(value = "count") @Positive @NotNull Integer count) {
         return filmService.getMostPopular(count);
     }
 }

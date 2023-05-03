@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 @Service
 public class FilmService {
 
-    private int id = 1;
     private final FilmStorage filmStorage;
     private final UserStorage userStorage;
 
@@ -37,14 +36,9 @@ public class FilmService {
     }
 
     public Film create(Film film) {
-        if (film.getId() == 0) {
-            film.setId(id);
-            id++;
-            log.info("Фильм под названием {} с id - {} добавлен!", film.getName(), film.getId());
-        } else {
-            log.info("Фильм под названием {} с id - {} обновлен!", film.getName(), film.getId());
-        }
-        return filmStorage.create(film);
+        Film newFilm = filmStorage.create(film);
+        log.info("Фильм под названием {} с id - {} добавлен!", film.getName(), film.getId());
+        return newFilm;
     }
 
     public Film update(Film film) {

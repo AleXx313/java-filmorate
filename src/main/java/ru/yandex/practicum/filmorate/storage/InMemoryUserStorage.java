@@ -8,14 +8,21 @@ import java.util.*;
 @Component
 public class InMemoryUserStorage implements UserStorage {
 
+    private int id = 1;
     private final Map<Integer, User> users;
 
     public InMemoryUserStorage() {
         users = new HashMap<>();
     }
 
+    private void setUserId(User user) {
+        user.setId(id);
+        id++;
+    }
+
     @Override
     public User create(User user) {
+        setUserId(user);
         users.put(user.getId(), user);
         return user;
     }
