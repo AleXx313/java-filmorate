@@ -16,8 +16,10 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     private void setFilmId(Film film) {
-        film.setId(id);
-        id++;
+        if (film.getId() == 0) {
+            film.setId(id);
+            id++;
+        }
     }
 
     @Override
