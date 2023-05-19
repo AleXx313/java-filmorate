@@ -3,11 +3,11 @@
 ![Диаграмма базы данных проекта](https://github.com/AleXx313/java-filmorate/blob/main/Database%20schema.png)
 
 ### Select запросы для тестирования:
-Получить список пользователей
-SELECT * FROM users
-Получить пользователя с Логином - {Логин}
-SELECT * FROM users WHERE login = '{Логин}'
-Получить список фильмов
-SELECT * FROM films
-Получить фильм с названием - {Название фильма}
+**Получить список пользователей**  
+SELECT * FROM users   
+**Получить пользователя с Логином - {Логин}**  
+SELECT * FROM users WHERE login = '{Логин}'  
+**Получить список фильмов**  
+SELECT * FROM films  
+**Получить фильм с названием - {Название фильма}**  
 SELECT * FROM films WHERE name = '{Название фильма}'
