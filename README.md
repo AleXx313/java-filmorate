@@ -1,5 +1,6 @@
 # Проект java-filmorate
 ### Диаграмма базы данных проекта (https://dbdiagram.io/d/6467bcc8dca9fb07c469a085)
+![Image alt](https://github.com/AleXx313/java-filmorate/blob/add-friends-likes/diagramm.png)
 
 ### Select запросы для тестирования:
 **Получить список пользователей**  
