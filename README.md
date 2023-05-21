@@ -1,5 +1,8 @@
 # java-filmorate
 Template repository for Filmorate project.
+<details>
+<summary>База данных проекта</summary>
+
 ### Диаграмма базы данных (https://dbdiagram.io/d/6467bcc8dca9fb07c469a085)
 ![Диаграмма базы данных](https://github.com/AleXx313/java-filmorate/blob/main/diagrama.png)
 ### Список SELECT запросов к Базе Данных
@@ -58,4 +61,5 @@ FROM users;
 >GROUP BY f.name<br>
 >ORDER by likes DESC<br>
 >LIMIT 5;
+</details>
 </details>
