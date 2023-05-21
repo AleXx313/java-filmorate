@@ -17,9 +17,9 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class User {
-    private int id;
+    private long id;
     @Builder.Default
-    private final Set<Integer> friends = new HashSet<>();
+    private final Set<Long> friends = new HashSet<>();
     @NotBlank(message = "Email не может быть null!")
     @Email(message = "Введенная строка не является email!")
     private String email;

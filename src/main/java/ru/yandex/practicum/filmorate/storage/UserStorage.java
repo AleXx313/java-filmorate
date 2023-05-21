@@ -12,9 +12,9 @@ public interface UserStorage {
 
     User update(User user);
 
-    User delete(int id);
+    User delete(long id);
 
-    User get(int id);
+    User get(long id);
 
     List<User> getAll();
 }

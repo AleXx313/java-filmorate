@@ -32,7 +32,7 @@ public class UserController {
 
     @GetMapping("/{id}")
     @ResponseBody
-    public User getUser(@PathVariable(value = "id") @Positive @NotNull Integer id) {
+    public User getUser(@PathVariable(value = "id") @Positive @NotNull Long id) {
         return userService.getUser(id);
     }
 
@@ -49,27 +49,27 @@ public class UserController {
     }
 
     @PutMapping("/{id}/friends/{friendId}") //PUT /users/{id}/friends/{friendId}
-    public void addFriends(@PathVariable(value = "id") @Positive @NotNull Integer id,
-                           @PathVariable(value = "friendId") @Positive @NotNull Integer friendId) {
+    public void addFriends(@PathVariable(value = "id") @Positive @NotNull Long id,
+                           @PathVariable(value = "friendId") @Positive @NotNull Long friendId) {
         userService.addFriends(id, friendId);
     }
 
     @DeleteMapping("/{id}/friends/{friendId}") //DELETE /users/{id}/friends/{friendId}
-    public void deleteFriends(@PathVariable(value = "id") @Positive @NotNull Integer id,
-                              @PathVariable(value = "friendId") @Positive @NotNull Integer friendId) {
+    public void deleteFriends(@PathVariable(value = "id") @Positive @NotNull Long id,
+                              @PathVariable(value = "friendId") @Positive @NotNull Long friendId) {
         userService.deleteFriends(id, friendId);
     }
 
     @GetMapping("/{id}/friends")//GET /users/{id}/friends
     @ResponseBody
-    public List<User> getFriend(@PathVariable(value = "id") @Positive @NotNull Integer id) {
+    public List<User> getFriend(@PathVariable(value = "id") @Positive @NotNull Long id) {
         return userService.getFriends(id);
     }
 
     @GetMapping("/{id}/friends/common/{otherId}")//GET /users/{id}/friends/common/{otherId}
     @ResponseBody
-    public List<User> getCommonFriends(@PathVariable(value = "id") @Positive @NotNull Integer id,
-                                       @PathVariable(value = "otherId") @Positive @NotNull Integer otherId) {
+    public List<User> getCommonFriends(@PathVariable(value = "id") @Positive @NotNull Long id,
+                                       @PathVariable(value = "otherId") @Positive @NotNull Long otherId) {
         return userService.getCommonFriends(id, otherId);
     }
 }

@@ -28,7 +28,7 @@ public class FilmService {
         return filmStorage.getAll();
     }
 
-    public Film getFilm(int id) {
+    public Film getFilm(long id) {
         if (filmStorage.get(id) == null) {
             throw new ModelNotFoundException("Фильм с id " + id + " отсутствует!");
         }
@@ -49,7 +49,7 @@ public class FilmService {
         return filmStorage.update(film);
     }
 
-    public void setLikes(int filmId, int userId) {
+    public void setLikes(long filmId, long userId) {
         if (filmStorage.get(filmId) == null) {
             throw new ModelNotFoundException("Фильм с id " + filmId + " отсутствует!");
         }
@@ -60,7 +60,7 @@ public class FilmService {
         film.getLikes().add(userId);
     }
 
-    public void removeLikes(int filmId, int userId) {
+    public void removeLikes(long filmId, long userId) {
         if (filmStorage.get(filmId) == null) {
             throw new ModelNotFoundException("Фильм с id " + filmId + " отсутствует!");
         }

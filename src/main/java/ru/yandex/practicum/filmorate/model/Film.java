@@ -19,9 +19,9 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class Film {
-    private int id;
+    private long id;
     @Builder.Default
-    private final Set<Integer> likes = new HashSet<>();
+    private final Set<Long> likes = new HashSet<>();
     @NotBlank(message = "Название фильма не может быть пустым!")
     private String name;
     @Size(min = 0, max = 200, message = "Описание фильма не должно превышать 200 символов!")

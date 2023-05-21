@@ -12,9 +12,9 @@ public interface FilmStorage {
 
     Film update(Film film);
 
-    Film delete(int id);
+    Film delete(long id);
 
-    Film get(int id);
+    Film get(long id);
 
     List<Film> getAll();
 }

@@ -8,8 +8,8 @@ import java.util.*;
 @Component
 public class InMemoryUserStorage implements UserStorage {
 
-    private int id = 1;
-    private final Map<Integer, User> users;
+    private long id = 1;
+    private final Map<Long, User> users;
 
     public InMemoryUserStorage() {
         users = new HashMap<>();
@@ -36,12 +36,12 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public User delete(int id) {
+    public User delete(long id) {
         return users.remove(id);
     }
 
     @Override
-    public User get(int id) {
+    public User get(long id) {
         return users.get(id);
     }
 

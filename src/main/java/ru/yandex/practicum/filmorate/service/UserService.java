@@ -25,7 +25,7 @@ public class UserService {
         return userStorage.getAll();
     }
 
-    public User getUser(int id) {
+    public User getUser(long id) {
         if (userStorage.get(id) == null) {
             throw new ModelNotFoundException("Пользователь с id " + id + " отсутствует!");
         }
@@ -49,7 +49,7 @@ public class UserService {
         return userStorage.update(user);
     }
 
-    public void addFriends(int userId1, int userId2) {
+    public void addFriends(long userId1, long userId2) {
         User friend1 = userStorage.get(userId1);
         User friend2 = userStorage.get(userId2);
         if (friend1 == null || friend2 == null) {
@@ -60,7 +60,7 @@ public class UserService {
         log.info("Пользователь с логином {} стал другом пользователя {}!", friend1.getLogin(), friend2.getLogin());
     }
 
-    public void deleteFriends(int userId1, int userId2) {
+    public void deleteFriends(long userId1, long userId2) {
         User friend1 = userStorage.get(userId1);
         User friend2 = userStorage.get(userId2);
         if (friend1 == null || friend2 == null) {
@@ -72,19 +72,19 @@ public class UserService {
                 friend1.getLogin(), friend2.getId());
     }
 
-    public List<User> getFriends(int id) {
+    public List<User> getFriends(long id) {
         List<User> friends = new ArrayList<>();
         User user = userStorage.get(id);
         if (user == null) {
             throw new ModelNotFoundException("Пользователь с id " + id + " отсутствует!");
         }
-        for (Integer friendId : user.getFriends()) {
+        for (Long friendId : user.getFriends()) {
             friends.add(userStorage.get(friendId));
         }
         return friends;
     }
 
-    public List<User> getCommonFriends(int userId1, int userId2) {
+    public List<User> getCommonFriends(long userId1, long userId2) {
         List<User> commonFriends = new ArrayList<>(getFriends(userId1));
         commonFriends.retainAll(getFriends(userId2));
         return commonFriends;
