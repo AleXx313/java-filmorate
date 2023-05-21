@@ -39,21 +39,14 @@ FROM users;
 <details>
 <summary>Получить список фильмов</summary>
 
->SELECT *
+>SELECT *<br>
 >FROM films;
 </details>
 <details>
 <summary>Получить фильм по ID</summary>
 
->SELECT *
->FROM films
->WHERE id = {id};
-</details>
-<details>
-<summary>Получить фильм по ID</summary>
-
->SELECT *
->FROM films
+>SELECT *<br>
+>FROM films<br>
 >WHERE id = {id};
 </details>
 <details>
