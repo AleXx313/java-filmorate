@@ -2,26 +2,29 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.ModelNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
-import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 public class FilmService {
 
     private final FilmStorage filmStorage;
-    private final UserStorage userStorage;
+    private final UserService userService;
+    private final LikesService likesService;
 
     @Autowired
-    public FilmService(FilmStorage filmStorage, UserStorage userStorage) {
+    public FilmService(@Qualifier("filmDbStorage") FilmStorage filmStorage
+            , UserService userService
+            , LikesService likesService) {
         this.filmStorage = filmStorage;
-        this.userStorage = userStorage;
+        this.userService = userService;
+        this.likesService = likesService;
     }
 
     public List<Film> findAll() {
@@ -48,34 +51,31 @@ public class FilmService {
         log.info("Фильм под названием {} с id - {} обновлен!", film.getName(), film.getId());
         return filmStorage.update(film);
     }
+    public boolean deleteFilm(long id){
+        return filmStorage.delete(id);
+    }
 
     public void setLikes(long filmId, long userId) {
         if (filmStorage.get(filmId) == null) {
             throw new ModelNotFoundException("Фильм с id " + filmId + " отсутствует!");
         }
-        if (userStorage.get(userId) == null) {
+        if (userService.getUser(userId) == null) {
             throw new ModelNotFoundException("Пользователь с id " + userId + " отсутствует!");
         }
-        Film film = filmStorage.get(filmId);
-        film.getLikes().add(userId);
+        likesService.addLikes(filmId, userId);
     }
 
     public void removeLikes(long filmId, long userId) {
         if (filmStorage.get(filmId) == null) {
             throw new ModelNotFoundException("Фильм с id " + filmId + " отсутствует!");
         }
-        if (userStorage.get(userId) == null) {
+        if (userService.getUser(userId) == null) {
             throw new ModelNotFoundException("Пользователь с id " + userId + " отсутствует!");
         }
-        Film film = filmStorage.get(filmId);
-        film.getLikes().remove(userId);
+        likesService.deleteLike(filmId, userId);
     }
 
     public List<Film> getMostPopular(int size) {
-        List<Film> allFilms = filmStorage.getAll();
-        return allFilms.stream()
-                .sorted((p1, p2) -> (p2.getLikes().size()) - p1.getLikes().size())
-                .limit(size)
-                .collect(Collectors.toList());
+        return likesService.getPopularFilms(size);
     }
 }

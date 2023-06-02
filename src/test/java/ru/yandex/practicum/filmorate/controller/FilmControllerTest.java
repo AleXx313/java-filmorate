@@ -4,11 +4,15 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import org.springframework.jdbc.core.JdbcTemplate;
 import ru.yandex.practicum.filmorate.exception.ModelNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
-import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
-import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.service.FriendService;
+import ru.yandex.practicum.filmorate.service.LikesService;
+import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.dao.*;
+import ru.yandex.practicum.filmorate.storage.memory.InMemoryFilmStorage;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -18,7 +22,6 @@ import java.time.LocalDate;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
-
 
 public class FilmControllerTest {
 
@@ -34,7 +37,16 @@ public class FilmControllerTest {
 
     @BeforeEach
     void init() {
-        controller = new FilmController(new FilmService(new InMemoryFilmStorage(), new InMemoryUserStorage()));
+
+        controller = new FilmController(
+                new FilmService(new InMemoryFilmStorage()
+                , new UserService(new UserDbStorage(new JdbcTemplate())
+                        , new FriendService(new FriendDaoImpl(new JdbcTemplate(),
+                        new UserDbStorage(new JdbcTemplate()))))
+                , new LikesService(new LikesDaoImpl(
+                        new JdbcTemplate()
+                        , new RatingDaoImpl(new JdbcTemplate())
+                        , new GenreDaoImpl(new JdbcTemplate())))));
         film = Film.builder()
                 .name("Film")
                 .description("Film description")

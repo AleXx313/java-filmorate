@@ -2,23 +2,26 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.ModelNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.FriendDao;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
 @Service
 public class UserService {
 
-    private UserStorage userStorage;
+    private final UserStorage userStorage;
+    private final FriendService friendService;
 
     @Autowired
-    public UserService(UserStorage userStorage) {
+    public UserService(@Qualifier("userDbStorage") UserStorage userStorage, FriendService friendService) {
         this.userStorage = userStorage;
+        this.friendService = friendService;
     }
 
     public List<User> findAll() {
@@ -37,7 +40,7 @@ public class UserService {
             user.setName(user.getLogin());
         }
         User newUser = userStorage.create(user);
-        log.info("Пользователь с логином {} с id - {} добавлен!", user.getLogin(), user.getId());
+        log.info("Пользователь с логином {} добавлен!", user.getLogin());
         return newUser;
     }
 
@@ -49,15 +52,18 @@ public class UserService {
         return userStorage.update(user);
     }
 
+    public boolean delete (long id){
+        return userStorage.delete(id);
+    }
+
     public void addFriends(long userId1, long userId2) {
         User friend1 = userStorage.get(userId1);
         User friend2 = userStorage.get(userId2);
         if (friend1 == null || friend2 == null) {
             throw new ModelNotFoundException("Пользователи с id " + userId1 + " или с id " + userId2 + " отсутствует!");
         }
-        friend1.getFriends().add(userId2);
-        friend2.getFriends().add(userId1);
         log.info("Пользователь с логином {} стал другом пользователя {}!", friend1.getLogin(), friend2.getLogin());
+        friendService.addFriends(userId1, userId2);
     }
 
     public void deleteFriends(long userId1, long userId2) {
@@ -66,27 +72,19 @@ public class UserService {
         if (friend1 == null || friend2 == null) {
             throw new ModelNotFoundException("Пользователи с id " + userId1 + " или с id " + userId2 + " отсутствует!");
         }
-        friend1.getFriends().remove(userId2);
-        friend2.getFriends().remove(userId1);
+
         log.info("Пользователь с логином {} перестал быть другом пользователя {}!",
                 friend1.getLogin(), friend2.getId());
+        friendService.deleteFriends(userId1, userId2);
     }
 
     public List<User> getFriends(long id) {
-        List<User> friends = new ArrayList<>();
-        User user = userStorage.get(id);
-        if (user == null) {
-            throw new ModelNotFoundException("Пользователь с id " + id + " отсутствует!");
-        }
-        for (Long friendId : user.getFriends()) {
-            friends.add(userStorage.get(friendId));
-        }
-        return friends;
+
+        return friendService.getFriends(id);
     }
 
     public List<User> getCommonFriends(long userId1, long userId2) {
-        List<User> commonFriends = new ArrayList<>(getFriends(userId1));
-        commonFriends.retainAll(getFriends(userId2));
-        return commonFriends;
+
+        return friendService.getCommonFriends(userId1, userId2);
     }
 }

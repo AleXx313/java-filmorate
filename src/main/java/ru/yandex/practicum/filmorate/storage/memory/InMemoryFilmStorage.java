@@ -1,7 +1,8 @@
-package ru.yandex.practicum.filmorate.storage;
+package ru.yandex.practicum.filmorate.storage.memory;
 
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
 import java.util.*;
 
@@ -36,8 +37,13 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public Film delete(long id) {
-        return films.remove(id);
+    public boolean delete(long id) {
+        Film film = films.remove(id);
+        if (film == null) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     @Override

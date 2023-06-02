@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,6 +16,11 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleModelNotFoundException(final ModelNotFoundException e) {
         return new ErrorResponse("Данные для обновления отсутствуют!", e.getMessage());
+    }
+    @ExceptionHandler(DataAccessException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleDataAccessException(final DataAccessException e){
+        return new ErrorResponse("Данные отсутствуют в базе данных!", e.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
