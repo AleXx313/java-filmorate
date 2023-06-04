@@ -39,14 +39,14 @@ public class FilmControllerTest {
     void init() {
 
         controller = new FilmController(
-                new FilmService(new InMemoryFilmStorage()
-                , new UserService(new UserDbStorage(new JdbcTemplate())
-                        , new FriendService(new FriendDaoImpl(new JdbcTemplate(),
-                        new UserDbStorage(new JdbcTemplate()))))
-                , new LikesService(new LikesDaoImpl(
-                        new JdbcTemplate()
-                        , new RatingDaoImpl(new JdbcTemplate())
-                        , new GenreDaoImpl(new JdbcTemplate())))));
+                new FilmService(new InMemoryFilmStorage(),
+                        new UserService(new UserDbStorage(new JdbcTemplate()),
+                                new FriendService(new FriendDaoImpl(new JdbcTemplate(),
+                        new UserDbStorage(new JdbcTemplate())))),
+                        new LikesService(new LikesDaoImpl(
+                        new JdbcTemplate(),
+                                new RatingDaoImpl(new JdbcTemplate()),
+                                new GenreDaoImpl(new JdbcTemplate())))));
         film = Film.builder()
                 .name("Film")
                 .description("Film description")
