@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import ru.yandex.practicum.filmorate.exception.ModelNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
@@ -46,12 +45,12 @@ public class UserDbStorage implements UserStorage {
         String sql = "UPDATE users SET " +
                 "login = ?, name = ?, email = ?, birthday = ? " +
                 "WHERE user_id = ?;";
-        jdbcTemplate.update(sql
-                , user.getLogin()
-                , user.getName()
-                , user.getEmail()
-                , user.getBirthday()
-                , user.getId());
+        jdbcTemplate.update(sql,
+                user.getLogin(),
+                user.getName(),
+                user.getEmail(),
+                user.getBirthday(),
+                user.getId());
 
         return get(user.getId());
     }
