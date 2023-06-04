@@ -17,9 +17,10 @@ public class ErrorHandler {
     public ErrorResponse handleModelNotFoundException(final ModelNotFoundException e) {
         return new ErrorResponse("Данные для обновления отсутствуют!", e.getMessage());
     }
+
     @ExceptionHandler(DataAccessException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleDataAccessException(final DataAccessException e){
+    public ErrorResponse handleDataAccessException(final DataAccessException e) {
         return new ErrorResponse("Данные отсутствуют в базе данных!", e.getMessage());
     }
 

@@ -51,7 +51,8 @@ public class FilmService {
         log.info("Фильм под названием {} с id - {} обновлен!", film.getName(), film.getId());
         return filmStorage.update(film);
     }
-    public boolean deleteFilm(long id){
+
+    public boolean deleteFilm(long id) {
         return filmStorage.delete(id);
     }
 

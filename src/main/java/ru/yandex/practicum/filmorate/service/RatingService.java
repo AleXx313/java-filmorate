@@ -15,11 +15,11 @@ public class RatingService {
         this.ratingDao = ratingDao;
     }
 
-    public List<Rating> getAll(){
+    public List<Rating> getAll() {
         return ratingDao.getAll();
     }
 
-    public Rating getById(int id){
+    public Rating getById(int id) {
         return ratingDao.getById(id);
     }
 }

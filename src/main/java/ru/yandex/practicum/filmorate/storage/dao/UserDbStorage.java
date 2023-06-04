@@ -13,13 +13,15 @@ import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 @Qualifier("userDbStorage")
 public class UserDbStorage implements UserStorage {
 
-    private final Logger log = LoggerFactory.getLogger(FilmDbStorage.class);
+    private final Logger log = LoggerFactory.getLogger(UserDbStorage.class);
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -33,7 +35,7 @@ public class UserDbStorage implements UserStorage {
                 .withTableName("users")
                 .usingGeneratedKeyColumns("user_id");
 
-        long id = simpleJdbcInsert.executeAndReturnKey(user.toMap()).longValue();
+        long id = simpleJdbcInsert.executeAndReturnKey(toMap(user)).longValue();
         return get(id);
     }
 
@@ -64,9 +66,6 @@ public class UserDbStorage implements UserStorage {
     public User get(long id) {
         String sql = "SELECT * FROM users WHERE user_id =?;";
         User user = jdbcTemplate.queryForObject(sql, this::makeUser, id);
-        if (user == null){
-            throw new ModelNotFoundException(String.format("Пользователь с ID - %d не найден!", id));
-        }
         return user;
     }
 
@@ -84,5 +83,15 @@ public class UserDbStorage implements UserStorage {
                 .email(rs.getString("email"))
                 .birthday(rs.getDate("birthday").toLocalDate())
                 .build();
+    }
+
+    private Map<String, Object> toMap(User user) {
+        Map<String, Object> values = new HashMap<>();
+        values.put("login", user.getLogin());
+        values.put("name", user.getName());
+        values.put("email", user.getEmail());
+        values.put("birthday", user.getBirthday());
+
+        return values;
     }
 }

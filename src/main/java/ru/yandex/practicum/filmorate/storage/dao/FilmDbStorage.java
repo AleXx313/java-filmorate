@@ -12,7 +12,6 @@ import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.service.RatingService;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.GenreDao;
-import ru.yandex.practicum.filmorate.storage.RatingDao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -114,7 +113,7 @@ public class FilmDbStorage implements FilmStorage {
         return film;
     }
 
-    public Map<String, Object> toMap(Film film) {
+    private Map<String, Object> toMap(Film film) {
         Map<String, Object> values = new HashMap<>();
         values.put("name", film.getName());
         values.put("description", film.getDescription());

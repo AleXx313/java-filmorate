@@ -11,10 +11,11 @@ import ru.yandex.practicum.filmorate.storage.RatingDao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+
 @Repository
 public class RatingDaoImpl implements RatingDao {
 
-    private final Logger log = LoggerFactory.getLogger(FilmDbStorage.class);
+    private final Logger log = LoggerFactory.getLogger(RatingDaoImpl.class);
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -36,7 +37,7 @@ public class RatingDaoImpl implements RatingDao {
         return jdbcTemplate.query(sql, this::makeRating);
     }
 
-    private Rating makeRating(ResultSet rs, int rowNum) throws SQLException{
+    private Rating makeRating(ResultSet rs, int rowNum) throws SQLException {
         return Rating.builder()
                 .id(rs.getInt("rating_id"))
                 .name(rs.getString("name"))

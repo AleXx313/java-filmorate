@@ -7,14 +7,11 @@ import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.FriendDao;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
 public class FriendDaoImpl implements FriendDao {
-    private final Logger log = LoggerFactory.getLogger(FilmDbStorage.class);
+    private final Logger log = LoggerFactory.getLogger(FriendDaoImpl.class);
     private final JdbcTemplate jdbcTemplate;
     private final UserDbStorage userDbStorage;
 

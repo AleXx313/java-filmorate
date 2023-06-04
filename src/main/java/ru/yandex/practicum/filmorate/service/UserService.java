@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.ModelNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.FriendDao;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.List;
@@ -52,7 +51,7 @@ public class UserService {
         return userStorage.update(user);
     }
 
-    public boolean delete (long id){
+    public boolean delete(long id) {
         return userStorage.delete(id);
     }
 
@@ -72,7 +71,6 @@ public class UserService {
         if (friend1 == null || friend2 == null) {
             throw new ModelNotFoundException("Пользователи с id " + userId1 + " или с id " + userId2 + " отсутствует!");
         }
-
         log.info("Пользователь с логином {} перестал быть другом пользователя {}!",
                 friend1.getLogin(), friend2.getId());
         friendService.deleteFriends(userId1, userId2);

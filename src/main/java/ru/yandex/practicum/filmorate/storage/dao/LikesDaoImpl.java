@@ -7,8 +7,6 @@ import ru.yandex.practicum.filmorate.storage.GenreDao;
 import ru.yandex.practicum.filmorate.storage.LikesDao;
 import ru.yandex.practicum.filmorate.storage.RatingDao;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
 @Repository

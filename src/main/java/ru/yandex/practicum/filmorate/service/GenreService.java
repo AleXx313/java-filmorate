@@ -12,17 +12,30 @@ import java.util.List;
 public class GenreService {
 
     private final GenreDao genreDao;
+
     @Autowired
     public GenreService(GenreDao genreDao) {
         this.genreDao = genreDao;
     }
 
-    public List<Genre> getAll(){
+    public List<Genre> getAll() {
         return genreDao.getAll();
     }
 
-    public Genre getById(int id){
+    public Genre getById(int id) {
         return genreDao.getById(id);
+    }
+
+    public void removeAllByFilm(long id) {
+        genreDao.removeAllByFilm(id);
+    }
+
+    public List<Genre> getByFilm(long id) {
+        return genreDao.getByFilm(id);
+    }
+
+    public void addFilmGenre(long filmId, int genreId) {
+        genreDao.addFilmGenre(filmId, genreId);
     }
 
 

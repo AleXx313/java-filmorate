@@ -22,12 +22,12 @@ public class RatingController {
     }
 
     @GetMapping
-    public List<Rating> getAll(){
+    public List<Rating> getAll() {
         return ratingService.getAll();
     }
 
     @GetMapping("/{id}")
-    public Rating getById(@PathVariable(value = "id") Integer id){
+    public Rating getById(@PathVariable(value = "id") Integer id) {
         return ratingService.getById(id);
     }
 }
