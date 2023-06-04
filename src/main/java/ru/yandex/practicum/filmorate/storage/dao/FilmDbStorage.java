@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.service.RatingService;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.GenreDao;
 import ru.yandex.practicum.filmorate.storage.RatingDao;
@@ -25,13 +26,13 @@ import java.util.stream.Collectors;
 public class FilmDbStorage implements FilmStorage {
     private final Logger log = LoggerFactory.getLogger(FilmDbStorage.class);
     private final JdbcTemplate jdbcTemplate;
-    private final RatingDao ratingDao;
+    private final RatingService ratingService;
     private final GenreDao genreDao;
 
     @Autowired
-    public FilmDbStorage(JdbcTemplate jdbcTemplate, RatingDao ratingDao, GenreDao genreDao) {
+    public FilmDbStorage(JdbcTemplate jdbcTemplate, RatingService ratingService, GenreDao genreDao) {
         this.jdbcTemplate = jdbcTemplate;
-        this.ratingDao = ratingDao;
+        this.ratingService = ratingService;
         this.genreDao = genreDao;
     }
 
@@ -106,7 +107,7 @@ public class FilmDbStorage implements FilmStorage {
                 .description(rs.getString("description"))
                 .releaseDate(rs.getDate("release_date").toLocalDate())
                 .duration(rs.getInt("duration"))
-                .mpa(ratingDao.getById(rs.getInt("rating_id")))
+                .mpa(ratingService.getById(rs.getInt("rating_id")))
                 //Добавить список жанров фильма
                 .genres(genreDao.getByFilm(rs.getLong("film_id")))
                 .build();

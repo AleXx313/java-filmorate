@@ -24,4 +24,6 @@ public class GenreService {
     public Genre getById(int id){
         return genreDao.getById(id);
     }
+
+
 }
