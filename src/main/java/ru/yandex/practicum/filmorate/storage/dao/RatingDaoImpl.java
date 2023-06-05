@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.dao;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -13,9 +12,9 @@ import java.sql.SQLException;
 import java.util.List;
 
 @Repository
+@Slf4j
 public class RatingDaoImpl implements RatingDao {
 
-    private final Logger log = LoggerFactory.getLogger(RatingDaoImpl.class);
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired

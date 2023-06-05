@@ -1,8 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.dao;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.Genre;
@@ -13,12 +11,11 @@ import java.sql.SQLException;
 import java.util.List;
 
 @Repository
+@Slf4j
 public class GenreDaoImpl implements GenreDao {
 
-    private final Logger log = LoggerFactory.getLogger(GenreDaoImpl.class);
     private final JdbcTemplate jdbcTemplate;
 
-    @Autowired
     public GenreDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }

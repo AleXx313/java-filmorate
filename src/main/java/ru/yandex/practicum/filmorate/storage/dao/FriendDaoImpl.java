@@ -1,8 +1,7 @@
 package ru.yandex.practicum.filmorate.storage.dao;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.FriendDao;
@@ -11,7 +10,7 @@ import java.util.List;
 
 @Repository
 public class FriendDaoImpl implements FriendDao {
-    private final Logger log = LoggerFactory.getLogger(FriendDaoImpl.class);
+
     private final JdbcTemplate jdbcTemplate;
     private final UserDbStorage userDbStorage;
 
@@ -24,11 +23,17 @@ public class FriendDaoImpl implements FriendDao {
     public void addFriend(long userId, long friendId) {
         userDbStorage.get(userId);
         userDbStorage.get(friendId);
+        boolean hasRequest = false;
+        if (checkFriendRequest(userId, friendId)) {
+            hasRequest = true;
+            String sql = "UPDATE friends SET status = TRUE WHERE friend_id = ? AND user_id = ?;";
+            jdbcTemplate.update(sql, userId, friendId);
+        }
 
-        String sql = "INSERT INTO friends (user_id, friend_id, status_id) " +
-                "VALUES (?, ?, 1);";
+        String sql = "INSERT INTO friends (user_id, friend_id, status) " +
+                "VALUES (?, ?, ?);";
 
-        jdbcTemplate.update(sql, userId, friendId);
+        jdbcTemplate.update(sql, userId, friendId, hasRequest);
     }
 
     @Override
@@ -74,5 +79,11 @@ public class FriendDaoImpl implements FriendDao {
                     .birthday(rs.getDate("birthday").toLocalDate())
                     .build();
         }, secondUserId, firstUserId);
+    }
+
+    private boolean checkFriendRequest(long friendId, long userId) {
+        String sql = "SELECT * FROM friends WHERE friend_id = ? AND user_id = ?";
+        SqlRowSet rs = jdbcTemplate.queryForRowSet(sql, friendId, userId);
+        return rs.next();
     }
 }

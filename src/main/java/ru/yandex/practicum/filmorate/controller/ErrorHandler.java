@@ -12,16 +12,10 @@ import ru.yandex.practicum.filmorate.model.ErrorResponse;
 @RestControllerAdvice
 public class ErrorHandler {
 
-    @ExceptionHandler(ModelNotFoundException.class)
+    @ExceptionHandler({ModelNotFoundException.class, DataAccessException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleModelNotFoundException(final ModelNotFoundException e) {
+    public ErrorResponse handleModelNotFoundException(final RuntimeException e) {
         return new ErrorResponse("Данные для обновления отсутствуют!", e.getMessage());
-    }
-
-    @ExceptionHandler(DataAccessException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleDataAccessException(final DataAccessException e) {
-        return new ErrorResponse("Данные отсутствуют в базе данных!", e.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

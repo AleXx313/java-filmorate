@@ -49,8 +49,8 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public boolean deleteUser(@PathVariable(value = "id") @Positive @NotNull Long id) {
-        return userService.delete(id);
+    public void deleteUser(@PathVariable(value = "id") @Positive @NotNull Long id) {
+        userService.delete(id);
     }
 
     @PutMapping("/{id}/friends/{friendId}") //PUT /users/{id}/friends/{friendId}

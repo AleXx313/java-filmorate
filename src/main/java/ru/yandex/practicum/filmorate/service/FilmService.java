@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.ModelNotFoundException;
@@ -18,7 +17,6 @@ public class FilmService {
     private final UserService userService;
     private final LikesService likesService;
 
-    @Autowired
     public FilmService(@Qualifier("filmDbStorage") FilmStorage filmStorage,
                        UserService userService,
                        LikesService likesService) {
@@ -52,8 +50,8 @@ public class FilmService {
         return filmStorage.update(film);
     }
 
-    public boolean deleteFilm(long id) {
-        return filmStorage.delete(id);
+    public void deleteFilm(long id) {
+        filmStorage.delete(id);
     }
 
     public void setLikes(long filmId, long userId) {

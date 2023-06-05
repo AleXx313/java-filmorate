@@ -1,8 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.dao;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -12,6 +10,7 @@ import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.service.RatingService;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.GenreDao;
+import ru.yandex.practicum.filmorate.storage.RatingDao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -21,17 +20,17 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Repository
-@Qualifier("filmDbStorage")
+@Slf4j
+@Qualifier
 public class FilmDbStorage implements FilmStorage {
-    private final Logger log = LoggerFactory.getLogger(FilmDbStorage.class);
+
     private final JdbcTemplate jdbcTemplate;
-    private final RatingService ratingService;
+    private final RatingDao ratingDao;
     private final GenreDao genreDao;
 
-    @Autowired
-    public FilmDbStorage(JdbcTemplate jdbcTemplate, RatingService ratingService, GenreDao genreDao) {
+    public FilmDbStorage(JdbcTemplate jdbcTemplate, RatingDao ratingDao, GenreDao genreDao) {
         this.jdbcTemplate = jdbcTemplate;
-        this.ratingService = ratingService;
+        this.ratingDao = ratingDao;
         this.genreDao = genreDao;
     }
 
@@ -79,10 +78,10 @@ public class FilmDbStorage implements FilmStorage {
 
 
     @Override
-    public boolean delete(long id) {
+    public void delete(long id) {
         String sql = "DELETE FROM films WHERE film_id = ?;";
 
-        return jdbcTemplate.update(sql, id) > 0;
+        jdbcTemplate.update(sql, id);
     }
 
     @Override
@@ -106,7 +105,7 @@ public class FilmDbStorage implements FilmStorage {
                 .description(rs.getString("description"))
                 .releaseDate(rs.getDate("release_date").toLocalDate())
                 .duration(rs.getInt("duration"))
-                .mpa(ratingService.getById(rs.getInt("rating_id")))
+                .mpa(ratingDao.getById(rs.getInt("rating_id")))
                 //Добавить список жанров фильма
                 .genres(genreDao.getByFilm(rs.getLong("film_id")))
                 .build();

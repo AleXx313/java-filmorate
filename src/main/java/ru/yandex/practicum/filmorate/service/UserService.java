@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.ModelNotFoundException;
@@ -17,7 +16,6 @@ public class UserService {
     private final UserStorage userStorage;
     private final FriendService friendService;
 
-    @Autowired
     public UserService(@Qualifier("userDbStorage") UserStorage userStorage, FriendService friendService) {
         this.userStorage = userStorage;
         this.friendService = friendService;
@@ -51,8 +49,8 @@ public class UserService {
         return userStorage.update(user);
     }
 
-    public boolean delete(long id) {
-        return userStorage.delete(id);
+    public void delete(long id) {
+        userStorage.delete(id);
     }
 
     public void addFriends(long userId1, long userId2) {

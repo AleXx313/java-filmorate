@@ -8,5 +8,4 @@ import lombok.Data;
 public class Friends {
     private long userId;
     private long friendId;
-    private int statusId;
 }

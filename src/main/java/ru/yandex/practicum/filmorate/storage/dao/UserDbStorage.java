@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.dao;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -17,10 +16,10 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-@Qualifier("userDbStorage")
+@Slf4j
+@Qualifier
 public class UserDbStorage implements UserStorage {
 
-    private final Logger log = LoggerFactory.getLogger(UserDbStorage.class);
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -56,9 +55,9 @@ public class UserDbStorage implements UserStorage {
     }
 
     @Override
-    public boolean delete(long id) {
+    public void delete(long id) {
         String sql = "DELETE FROM users WHERE user_id = ?;";
-        return jdbcTemplate.update(sql, id) > 0;
+        jdbcTemplate.update(sql, id);
     }
 
     @Override

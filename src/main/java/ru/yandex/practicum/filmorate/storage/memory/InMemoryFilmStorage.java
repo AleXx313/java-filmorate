@@ -37,13 +37,8 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public boolean delete(long id) {
-        Film film = films.remove(id);
-        if (film == null) {
-            return false;
-        } else {
-            return true;
-        }
+    public void delete(long id) {
+        films.remove(id);
     }
 
     @Override
