@@ -17,7 +17,6 @@ import java.util.Map;
 
 @Repository
 @Slf4j
-@Qualifier
 public class UserDbStorage implements UserStorage {
 
     private final JdbcTemplate jdbcTemplate;

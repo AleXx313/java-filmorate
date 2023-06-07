@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 
 @Repository
 @Slf4j
-@Qualifier
 public class FilmDbStorage implements FilmStorage {
 
     private final JdbcTemplate jdbcTemplate;
