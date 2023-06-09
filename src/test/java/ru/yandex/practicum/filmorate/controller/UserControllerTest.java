@@ -3,10 +3,14 @@ package ru.yandex.practicum.filmorate.controller;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.jdbc.core.JdbcTemplate;
 import ru.yandex.practicum.filmorate.exception.ModelNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.FriendService;
 import ru.yandex.practicum.filmorate.service.UserService;
-import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.dao.FriendDaoImpl;
+import ru.yandex.practicum.filmorate.storage.dao.UserDbStorage;
+import ru.yandex.practicum.filmorate.storage.memory.InMemoryUserStorage;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -32,7 +36,8 @@ public class UserControllerTest {
 
     @BeforeEach
     public void init() {
-        controller = new UserController(new UserService(new InMemoryUserStorage()));
+        controller = new UserController(new UserService(new InMemoryUserStorage(),
+                new FriendService(new FriendDaoImpl(new JdbcTemplate(), new UserDbStorage(new JdbcTemplate())))));
         user = User.builder()
                 .email("email@email.ru")
                 .login("Login")
