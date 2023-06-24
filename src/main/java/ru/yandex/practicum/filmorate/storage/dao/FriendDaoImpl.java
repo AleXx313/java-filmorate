@@ -46,6 +46,7 @@ public class FriendDaoImpl implements FriendDao {
 
     @Override
     public List<User> getFriends(long userId) {
+        userDbStorage.get(userId);
         String sql = "SELECT u.user_id, u.login, u.name, u.email, u.birthday " +
                 "FROM friends AS f " +
                 "JOIN users AS u ON f.friend_id = u.user_id " +

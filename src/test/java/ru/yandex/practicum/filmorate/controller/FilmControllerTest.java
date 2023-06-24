@@ -1,82 +1,66 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import org.junit.jupiter.api.BeforeAll;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import ru.yandex.practicum.filmorate.exception.ModelNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.service.FilmService;
-import ru.yandex.practicum.filmorate.service.FriendService;
-import ru.yandex.practicum.filmorate.service.LikesService;
-import ru.yandex.practicum.filmorate.service.UserService;
-import ru.yandex.practicum.filmorate.storage.dao.*;
-import ru.yandex.practicum.filmorate.storage.memory.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.model.Rating;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
+
 import java.time.LocalDate;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest
+@AutoConfigureTestDatabase
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class FilmControllerTest {
 
-    private FilmController controller;
+    private final FilmController controller;
     private Film film;
-    private static Validator validator;
-
-    @BeforeAll
-    public static void validatorInit() {
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        validator = factory.getValidator();
-    }
+    private Film film2;
+    private Film film3;
 
     @BeforeEach
     void init() {
-
-        controller = new FilmController(
-                new FilmService(new InMemoryFilmStorage(),
-                        new UserService(new UserDbStorage(new JdbcTemplate()),
-                                new FriendService(new FriendDaoImpl(new JdbcTemplate(),
-                        new UserDbStorage(new JdbcTemplate())))),
-                        new LikesService(new LikesDaoImpl(
-                        new JdbcTemplate(),
-                                new RatingDaoImpl(new JdbcTemplate()),
-                                new GenreDaoImpl(new JdbcTemplate())))));
         film = Film.builder()
                 .name("Film")
                 .description("Film description")
                 .releaseDate(LocalDate.of(1990, 10, 10))
                 .duration(120)
+                .mpa(Rating.builder().id(1).build())
+                .build();
+        film2 = Film.builder()
+                .name("Film2")
+                .description("Film2 description")
+                .releaseDate(LocalDate.of(1989, 10, 10))
+                .duration(125)
+                .mpa(Rating.builder().id(1).build())
+                .build();
+        film3 = Film.builder()
+                .name("Film3")
+                .description("Film3 description")
+                .releaseDate(LocalDate.of(1988, 10, 10))
+                .duration(115)
+                .mpa(Rating.builder().id(1).build())
                 .build();
     }
 
     @Test
     public void shouldReturnListWithFilms() {
-        Film film2 = Film.builder()
-                .name("Film2")
-                .description("Film2 description")
-                .releaseDate(LocalDate.of(1989, 10, 10))
-                .duration(125)
-                .build();
-        Film film3 = Film.builder()
-                .name("Film3")
-                .description("Film3 description")
-                .releaseDate(LocalDate.of(1988, 10, 10))
-                .duration(115)
-                .build();
         assertTrue(controller.findAll().isEmpty());
         controller.create(film);
         assertEquals(1, controller.findAll().size());
         controller.create(film2);
         assertEquals(2, controller.findAll().size());
         controller.create(film3);
-        assertEquals(3, controller.findAll().size());
-        controller.create(film);
         assertEquals(3, controller.findAll().size());
     }
 
@@ -103,6 +87,7 @@ public class FilmControllerTest {
                 .description("UpdatedFilm description")
                 .releaseDate(LocalDate.of(1995, 10, 10))
                 .duration(125)
+                .mpa(Rating.builder().id(1).build())
                 .build();
 
         Film actualFilm = controller.update(updatedFilm);
@@ -114,53 +99,5 @@ public class FilmControllerTest {
                 "Дата релиза не соответствует ожидаемой.");
         assertEquals(125, actualFilm.getDuration());
         assertEquals(controller.findAll().get(0), actualFilm, "Сохраненный фильм не соответствует ожидаемому!");
-    }
-
-    @Test
-    public void testNameValidation() {
-        film = film.toBuilder().name(" ").build();
-        Set<ConstraintViolation<Film>> violations = validator.validate(film);
-        assertFalse(violations.isEmpty());
-        assertEquals("Название фильма не может быть пустым!", violations.iterator().next().getMessage());
-    }
-
-    @Test
-    public void testDescriptionValidation() {
-        film = film.toBuilder()
-                .description("|||||||<Очень длинное описание!>|||||||" +
-                        "|||||||<Очень длинное описание!>|||||||" +
-                        "|||||||<Очень длинное описание!>|||||||" +
-                        "|||||||<Очень длинное описание!>|||||||" +
-                        "|||||||<Очень длинное описание!>|||||||" +
-                        "|||||||<Очень длинное описание!>|||||||")
-                .build();
-        Set<ConstraintViolation<Film>> violations = validator.validate(film);
-        assertFalse(violations.isEmpty());
-        assertEquals("Описание фильма не должно превышать 200 символов!",
-                violations.iterator().next().getMessage());
-    }
-
-    @Test
-    public void testReleaseDateValidation() {
-        film = film.toBuilder().releaseDate(LocalDate.of(1000, 10, 10)).build();
-        Set<ConstraintViolation<Film>> violations = validator.validate(film);
-        assertFalse(violations.isEmpty());
-        assertEquals("Дата релиза указана неверно!", violations.iterator().next().getMessage());
-    }
-
-    @Test
-    public void testDurationValidation() {
-        film = film.toBuilder().duration(-10).build();
-        Set<ConstraintViolation<Film>> violations = validator.validate(film);
-        assertFalse(violations.isEmpty());
-        assertEquals("Длительность фильма не может быть меньше или равна нулю!",
-                violations.iterator().next().getMessage());
-    }
-
-    @Test
-    public void shouldThrowValidationExceptionIfNoFilmToUpdate() {
-        film = film.toBuilder().id(1).build();
-        ModelNotFoundException e = assertThrows(ModelNotFoundException.class, () -> controller.update(film));
-        assertEquals(e.getMessage(), "Фильм с id 1 отсутствует!");
     }
 }

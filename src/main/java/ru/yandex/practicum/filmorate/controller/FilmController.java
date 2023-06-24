@@ -68,8 +68,17 @@ public class FilmController {
 
     @GetMapping("/popular")//GET /films/popular?count={count}
     @ResponseBody
-    public List<Film> getPopularFilms(@RequestParam(value = "count",
-            defaultValue = "10", required = false) @PathVariable(value = "count") @Positive @NotNull Integer count) {
+    public List<Film> getPopularFilms(@RequestParam(value = "count", defaultValue = "10", required = false)
+                                          @PathVariable(value = "count") @Positive @NotNull Integer count) {
         return filmService.getMostPopular(count);
+    }
+
+    @GetMapping("/common")
+    @ResponseBody
+    public List<Film> getCommonFilms (@RequestParam(value = "userId")
+                                     @PathVariable(value = "userId") @Positive @NotNull Long userId,
+                                     @RequestParam(value = "friendId")
+                                     @PathVariable(value = "friendId") @Positive @NotNull Long friendId){
+        return filmService.getCommonFilms(userId, friendId);
     }
 }

@@ -7,6 +7,7 @@ import ru.yandex.practicum.filmorate.exception.ModelNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -76,5 +77,9 @@ public class FilmService {
 
     public List<Film> getMostPopular(int size) {
         return likesService.getPopularFilms(size);
+    }
+
+    public List<Film> getCommonFilms(long userId, long friendId){
+        return filmStorage.getCommonFilms(userId, friendId);
     }
 }

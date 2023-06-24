@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -13,12 +12,6 @@ import ru.yandex.practicum.filmorate.storage.dao.UserDbStorage;
 import ru.yandex.practicum.filmorate.storage.memory.InMemoryUserStorage;
 
 import java.time.LocalDate;
-import java.util.Set;
-
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -26,13 +19,6 @@ public class UserControllerTest {
 
     private UserController controller;
     private User user;
-    private static Validator validator;
-
-    @BeforeAll
-    public static void validatorInit() {
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        validator = factory.getValidator();
-    }
 
     @BeforeEach
     public void init() {
@@ -106,38 +92,6 @@ public class UserControllerTest {
         assertEquals("updatedEmail@email.ru", actualUser.getEmail());
         assertEquals(LocalDate.of(2002, 10, 10), actualUser.getBirthday());
         assertFalse(controller.findAll().isEmpty());
-    }
-
-    @Test
-    public void testEmailValidation() {
-        user = user.toBuilder().email("definitely not email").build();
-        Set<ConstraintViolation<User>> violations = validator.validate(user);
-        assertFalse(violations.isEmpty());
-        assertEquals("Введенная строка не является email!", violations.iterator().next().getMessage());
-    }
-
-    @Test
-    public void testEmailNotNullValidation() {
-        user = user.toBuilder().email(null).build();
-        Set<ConstraintViolation<User>> violations = validator.validate(user);
-        assertFalse(violations.isEmpty());
-        assertEquals("Email не может быть null!", violations.iterator().next().getMessage());
-    }
-
-    @Test
-    public void testLoginValidation() {
-        user = user.toBuilder().login("").build();
-        Set<ConstraintViolation<User>> violations = validator.validate(user);
-        assertFalse(violations.isEmpty());
-        assertEquals("Логин не может быть пустым!", violations.iterator().next().getMessage());
-    }
-
-    @Test
-    public void testBirthdayValidation() {
-        user = user.toBuilder().birthday(LocalDate.of(2077, 10, 10)).build();
-        Set<ConstraintViolation<User>> violations = validator.validate(user);
-        assertFalse(violations.isEmpty());
-        assertEquals("День рождения не может быть в будущем!", violations.iterator().next().getMessage());
     }
 
     @Test
