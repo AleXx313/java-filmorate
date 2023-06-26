@@ -4,7 +4,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.FriendDao;
+import ru.yandex.practicum.filmorate.storage.interfaces.FriendDao;
 
 import java.util.List;
 
@@ -12,11 +12,11 @@ import java.util.List;
 public class FriendDaoImpl implements FriendDao {
 
     private final JdbcTemplate jdbcTemplate;
-    private final UserDbStorage userDbStorage;
+    private final UserDaoImpl userDbStorage;
 
-    public FriendDaoImpl(JdbcTemplate jdbcTemplate, UserDbStorage userDbStorage) {
+    public FriendDaoImpl(JdbcTemplate jdbcTemplate, UserDaoImpl userDaoImpl) {
         this.jdbcTemplate = jdbcTemplate;
-        this.userDbStorage = userDbStorage;
+        this.userDbStorage = userDaoImpl;
     }
 
     @Override

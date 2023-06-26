@@ -2,17 +2,17 @@ package ru.yandex.practicum.filmorate.storage.memory;
 
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.storage.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.interfaces.FilmDao;
 
 import java.util.*;
 
 @Component
-public class InMemoryFilmStorage implements FilmStorage {
+public class InMemoryFilmDao implements FilmDao {
 
     private long id = 1;
     private final Map<Long, Film> films;
 
-    public InMemoryFilmStorage() {
+    public InMemoryFilmDao() {
         films = new HashMap<>();
     }
 

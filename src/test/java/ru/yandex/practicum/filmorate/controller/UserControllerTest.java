@@ -8,7 +8,7 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.FriendService;
 import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.storage.dao.FriendDaoImpl;
-import ru.yandex.practicum.filmorate.storage.dao.UserDbStorage;
+import ru.yandex.practicum.filmorate.storage.dao.UserDaoImpl;
 import ru.yandex.practicum.filmorate.storage.memory.InMemoryUserStorage;
 
 import java.time.LocalDate;
@@ -23,7 +23,7 @@ public class UserControllerTest {
     @BeforeEach
     public void init() {
         controller = new UserController(new UserService(new InMemoryUserStorage(),
-                new FriendService(new FriendDaoImpl(new JdbcTemplate(), new UserDbStorage(new JdbcTemplate())))));
+                new FriendService(new FriendDaoImpl(new JdbcTemplate(), new UserDaoImpl(new JdbcTemplate())))));
         user = User.builder()
                 .email("email@email.ru")
                 .login("Login")

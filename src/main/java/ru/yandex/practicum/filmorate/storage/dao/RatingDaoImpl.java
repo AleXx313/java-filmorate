@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.Rating;
-import ru.yandex.practicum.filmorate.storage.RatingDao;
+import ru.yandex.practicum.filmorate.storage.interfaces.RatingDao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

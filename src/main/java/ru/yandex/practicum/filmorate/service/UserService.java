@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.ModelNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.UserStorage;
+import ru.yandex.practicum.filmorate.storage.interfaces.UserStorage;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ public class UserService {
     private final UserStorage userStorage;
     private final FriendService friendService;
 
-    public UserService(@Qualifier("userDbStorage") UserStorage userStorage, FriendService friendService) {
+    public UserService(@Qualifier("userDaoImpl") UserStorage userStorage, FriendService friendService) {
         this.userStorage = userStorage;
         this.friendService = friendService;
     }

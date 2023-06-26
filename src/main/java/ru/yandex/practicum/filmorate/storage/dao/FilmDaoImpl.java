@@ -6,9 +6,9 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
-import ru.yandex.practicum.filmorate.storage.FilmStorage;
-import ru.yandex.practicum.filmorate.storage.GenreDao;
-import ru.yandex.practicum.filmorate.storage.RatingDao;
+import ru.yandex.practicum.filmorate.storage.interfaces.FilmDao;
+import ru.yandex.practicum.filmorate.storage.interfaces.GenreDao;
+import ru.yandex.practicum.filmorate.storage.interfaces.RatingDao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,13 +19,13 @@ import java.util.stream.Collectors;
 
 @Repository
 @Slf4j
-public class FilmDbStorage implements FilmStorage {
+public class FilmDaoImpl implements FilmDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final RatingDao ratingDao;
     private final GenreDao genreDao;
 
-    public FilmDbStorage(JdbcTemplate jdbcTemplate, RatingDao ratingDao, GenreDao genreDao) {
+    public FilmDaoImpl(JdbcTemplate jdbcTemplate, RatingDao ratingDao, GenreDao genreDao) {
         this.jdbcTemplate = jdbcTemplate;
         this.ratingDao = ratingDao;
         this.genreDao = genreDao;
@@ -104,9 +104,7 @@ public class FilmDbStorage implements FilmStorage {
                 "WHERE l.user_id = ? AND l2.user_id = ? " +
                 "GROUP BY f.film_id " +
                 "ORDER BY COUNT(l.user_id) DESC;";
-        List<Film> commonFilms = jdbcTemplate.query(sql, (this::makeFilm), userId, friendId);
-
-        return commonFilms;
+        return jdbcTemplate.query(sql, (this::makeFilm), userId, friendId);
     }
 
     private Film makeFilm(ResultSet rs, int rowNum) throws SQLException {

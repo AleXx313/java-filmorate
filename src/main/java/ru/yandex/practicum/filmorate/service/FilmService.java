@@ -5,58 +5,57 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.ModelNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.storage.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.interfaces.FilmDao;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
 @Service
 public class FilmService {
 
-    private final FilmStorage filmStorage;
+    private final FilmDao filmDao;
     private final UserService userService;
     private final LikesService likesService;
 
-    public FilmService(@Qualifier("filmDbStorage") FilmStorage filmStorage,
+    public FilmService(@Qualifier("filmDaoImpl") FilmDao filmDao,
                        UserService userService,
                        LikesService likesService) {
-        this.filmStorage = filmStorage;
+        this.filmDao = filmDao;
         this.userService = userService;
         this.likesService = likesService;
     }
 
     public List<Film> findAll() {
-        return filmStorage.getAll();
+        return filmDao.getAll();
     }
 
     public Film getFilm(long id) {
-        if (filmStorage.get(id) == null) {
+        if (filmDao.get(id) == null) {
             throw new ModelNotFoundException("Фильм с id " + id + " отсутствует!");
         }
-        return filmStorage.get(id);
+        return filmDao.get(id);
     }
 
     public Film create(Film film) {
-        Film newFilm = filmStorage.create(film);
+        Film newFilm = filmDao.create(film);
         log.info("Фильм под названием {} с id - {} добавлен!", film.getName(), film.getId());
         return newFilm;
     }
 
     public Film update(Film film) {
-        if (filmStorage.get(film.getId()) == null) {
+        if (filmDao.get(film.getId()) == null) {
             throw new ModelNotFoundException("Фильм с id " + film.getId() + " отсутствует!");
         }
         log.info("Фильм под названием {} с id - {} обновлен!", film.getName(), film.getId());
-        return filmStorage.update(film);
+        return filmDao.update(film);
     }
 
     public void deleteFilm(long id) {
-        filmStorage.delete(id);
+        filmDao.delete(id);
     }
 
     public void setLikes(long filmId, long userId) {
-        if (filmStorage.get(filmId) == null) {
+        if (filmDao.get(filmId) == null) {
             throw new ModelNotFoundException("Фильм с id " + filmId + " отсутствует!");
         }
         if (userService.getUser(userId) == null) {
@@ -66,7 +65,7 @@ public class FilmService {
     }
 
     public void removeLikes(long filmId, long userId) {
-        if (filmStorage.get(filmId) == null) {
+        if (filmDao.get(filmId) == null) {
             throw new ModelNotFoundException("Фильм с id " + filmId + " отсутствует!");
         }
         if (userService.getUser(userId) == null) {
@@ -80,6 +79,6 @@ public class FilmService {
     }
 
     public List<Film> getCommonFilms(long userId, long friendId){
-        return filmStorage.getCommonFilms(userId, friendId);
+        return filmDao.getCommonFilms(userId, friendId);
     }
 }

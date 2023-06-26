@@ -19,6 +19,8 @@ public class Film {
     private final Set<Long> likes = new HashSet<>();
     @Builder.Default
     private final List<Genre> genres = new ArrayList<>();
+    @Builder.Default
+    private final List<Director> directors = new ArrayList<>();
     @NotBlank(message = "Название фильма не может быть пустым!")
     private String name;
     @Size(min = 0, max = 200, message = "Описание фильма не должно превышать 200 символов!")
