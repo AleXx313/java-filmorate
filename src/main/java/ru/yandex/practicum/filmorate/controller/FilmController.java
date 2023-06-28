@@ -76,10 +76,10 @@ public class FilmController {
     }
 
     @GetMapping("/director/{directorId}")
-    public List<Film> getDirectorFilmsSortedByParam(@PathVariable(value = "directorId") Long directorId,
+    public List<Film> getSortedDirectorFilms(@PathVariable(value = "directorId") Long directorId,
                                                     @RequestParam(value = "sortBy", defaultValue = "likes",
                                                             required = false) String sortBy){
-        return new ArrayList<>();
+        return filmService.getSortedDirectorFilms(directorId, sortBy);
     }
 
 }

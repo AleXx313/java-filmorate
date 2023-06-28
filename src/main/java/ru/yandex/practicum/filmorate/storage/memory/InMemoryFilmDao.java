@@ -55,4 +55,16 @@ public class InMemoryFilmDao implements FilmDao {
     public List<Film> getCommonFilms(long userId, long friendId) {
         return null;
     }
+
+    @Override
+    public List<Film> getByDirectorSortedByLikes(long directorId) {
+        return null;
+    }
+
+    @Override
+    public List<Film> getByDirectorSortedByYear(long directorId) {
+        return null;
+    }
+
+
 }

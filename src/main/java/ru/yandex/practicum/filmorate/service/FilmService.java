@@ -7,6 +7,7 @@ import ru.yandex.practicum.filmorate.exception.ModelNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.interfaces.FilmDao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -82,5 +83,15 @@ public class FilmService {
         return filmDao.getCommonFilms(userId, friendId);
     }
 
-  //  public List<Film>
+    public List<Film> getSortedDirectorFilms (long directorId, String sortParam){
+
+        switch (sortParam){
+            case "likes":
+                return filmDao.getByDirectorSortedByLikes(directorId);
+            case "year":
+                return filmDao.getByDirectorSortedByYear(directorId);
+            default:
+                throw new ModelNotFoundException("Неверный параметр запроса!");
+        }
+    }
 }

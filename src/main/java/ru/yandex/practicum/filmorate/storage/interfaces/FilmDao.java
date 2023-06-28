@@ -19,4 +19,7 @@ public interface FilmDao {
     List<Film> getAll();
 
     List<Film> getCommonFilms(long userId, long friendId);
+
+    List<Film> getByDirectorSortedByLikes (long directorId);
+    List<Film> getByDirectorSortedByYear (long directorId);
 }

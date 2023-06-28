@@ -14,6 +14,7 @@ import ru.yandex.practicum.filmorate.storage.interfaces.RatingDao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -125,6 +126,35 @@ public class FilmDaoImpl implements FilmDao {
                 "ORDER BY COUNT(l.user_id) DESC;";
         return jdbcTemplate.query(sql, (this::makeFilm), userId, friendId);
     }
+
+    @Override
+    public List<Film> getByDirectorSortedByLikes(long directorId) {
+        directorDao.getDirectorById(directorId);
+        String sql = "SELECT * " +
+                "FROM films AS f " +
+                "LEFT JOIN likes AS l ON f.film_id = l.film_id " +
+                "LEFT JOIN films_directors AS d ON f.film_id = d.film_id " +
+                "WHERE d.director_id = ? " +
+                "GROUP BY f.film_id " +
+                "ORDER BY COUNT(l.film_id) DESC;";
+
+        return jdbcTemplate.query(sql, this::makeFilm, directorId);
+
+    }
+
+    @Override
+    public List<Film> getByDirectorSortedByYear(long directorId) {
+        directorDao.getDirectorById(directorId);
+        String sql = "SELECT * " +
+                "FROM films AS f " +
+                "LEFT JOIN films_directors AS d ON f.film_id = d.film_id " +
+                "WHERE d.director_id = ? " +
+                "GROUP BY f.film_id " +
+                "ORDER by f.release_date;";
+
+        return jdbcTemplate.query(sql, this::makeFilm, directorId);
+    }
+
 
     private Film makeFilm(ResultSet rs, int rowNum) throws SQLException {
         Film film = Film.builder()
