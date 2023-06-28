@@ -28,6 +28,8 @@ public class DirectorDaoImpl implements DirectorDao {
         return jdbcTemplate.query(sql, this::makeDirector);
     }
 
+
+
     @Override
     public Director getDirectorById(long id) {
         String sql = "SELECT * FROM directors WHERE director_id = ?;";
@@ -63,6 +65,22 @@ public class DirectorDaoImpl implements DirectorDao {
         String sql = "INSERT INTO films_directors (film_id, director_id) " +
                 "VALUES (?, ?);";
         jdbcTemplate.update(sql, filmId, directorId);
+    }
+
+    @Override
+    public List<Director> getDirectorsByFilmId(long filmId) {
+        String sql = "SELECT * FROM directors AS d " +
+                "INNER JOIN films_directors AS fd ON d.director_id = fd.director_id " +
+                "INNER JOIN films AS f ON fd.film_id = f.film_id " +
+                "WHERE f.film_id = ?;";
+
+        return jdbcTemplate.query(sql, this::makeDirector, filmId);
+    }
+
+    @Override
+    public void removeByFilm(long filmId) {
+        String sql = "DELETE FROM films_directors WHERE film_id = ?;";
+        jdbcTemplate.update(sql, filmId);
     }
 
 

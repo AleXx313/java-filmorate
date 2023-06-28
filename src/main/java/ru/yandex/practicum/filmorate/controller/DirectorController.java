@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/directors")
 public class DirectorController {
 
@@ -21,31 +21,27 @@ public class DirectorController {
     }
 
     @GetMapping
-    @ResponseBody
     public List<Director> getDirectors(){
         return directorService.getDirectors();
     }
 
     @GetMapping ("/{id}")
-    @ResponseBody
     public Director getDirectorById(@PathVariable (value = "id") @NotNull @Positive Long id){
         return directorService.getDirectorById(id);
     }
 
     @PostMapping
-    @ResponseBody
     public Director addDirector(@Valid @RequestBody Director director){
         return directorService.addDirector(director);
     }
 
     @PutMapping
-    @ResponseBody
     public Director updateDirector(@Valid @RequestBody Director director){
         return directorService.updateDirector(director);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteDirector(@NotNull @Positive Long id){
+    public void deleteDirector(@PathVariable(value = "id") @NotNull @Positive Long id){
         directorService.deleteDirector(id);
     }
 }

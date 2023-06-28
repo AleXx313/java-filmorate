@@ -4,8 +4,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.storage.interfaces.DirectorDao;
 import ru.yandex.practicum.filmorate.storage.interfaces.FilmDao;
 import ru.yandex.practicum.filmorate.storage.interfaces.GenreDao;
 import ru.yandex.practicum.filmorate.storage.interfaces.RatingDao;
@@ -24,11 +26,13 @@ public class FilmDaoImpl implements FilmDao {
     private final JdbcTemplate jdbcTemplate;
     private final RatingDao ratingDao;
     private final GenreDao genreDao;
+    private final DirectorDao directorDao;
 
-    public FilmDaoImpl(JdbcTemplate jdbcTemplate, RatingDao ratingDao, GenreDao genreDao) {
+    public FilmDaoImpl(JdbcTemplate jdbcTemplate, RatingDao ratingDao, GenreDao genreDao, DirectorDao directorDao) {
         this.jdbcTemplate = jdbcTemplate;
         this.ratingDao = ratingDao;
         this.genreDao = genreDao;
+        this.directorDao = directorDao;
     }
 
     @Override
@@ -42,6 +46,11 @@ public class FilmDaoImpl implements FilmDao {
         if (!film.getGenres().isEmpty()) {
             for (Genre genre : film.getGenres()) {
                 genreDao.addFilmGenre(id, genre.getId());
+            }
+        }
+        if (!film.getDirectors().isEmpty()) {
+            for (Director director : film.getDirectors()) {
+                directorDao.addFilmDirector(id, director.getId());
             }
         }
         return get(id);
@@ -70,9 +79,19 @@ public class FilmDaoImpl implements FilmDao {
                 genreDao.addFilmGenre(film.getId(), genre.getId());
             }
         }
+
+        List<Director> directors = directorDao.getDirectorsByFilmId(film.getId());
+        if (!directors.isEmpty()){
+            directorDao.removeByFilm(film.getId());
+        }
+        directors = film.getDirectors().stream().distinct().collect(Collectors.toList());
+        if (!film.getDirectors().isEmpty()) {
+            for (Director director : directors) {
+                directorDao.addFilmDirector(film.getId(), director.getId());
+            }
+        }
         return get(film.getId());
     }
-
 
     @Override
     public void delete(long id) {
@@ -117,6 +136,7 @@ public class FilmDaoImpl implements FilmDao {
                 .mpa(ratingDao.getById(rs.getInt("rating_id")))
                 //Добавить список жанров фильма
                 .genres(genreDao.getByFilm(rs.getLong("film_id")))
+                .directors(directorDao.getDirectorsByFilmId(rs.getLong("film_id")))
                 .build();
         return film;
     }

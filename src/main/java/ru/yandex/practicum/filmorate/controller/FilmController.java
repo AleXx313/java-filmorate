@@ -23,25 +23,21 @@ public class FilmController {
     }
 
     @GetMapping
-    @ResponseBody
     public List<Film> findAll() {
         return filmService.findAll();
     }
 
     @GetMapping("/{id}")
-    @ResponseBody
     public Film getFilm(@PathVariable(value = "id") @Positive @NotNull Long id) {
         return filmService.getFilm(id);
     }
 
     @PostMapping
-    @ResponseBody
     public Film create(@Valid @RequestBody Film film) {
         return filmService.create(film);
     }
 
     @PutMapping
-    @ResponseBody
     public Film update(@Valid @RequestBody Film film) {
         return filmService.update(film);
     }
@@ -53,7 +49,6 @@ public class FilmController {
 
 
     @PutMapping("/{id}/like/{userId}")//PUT /films/{id}/like/{userId}
-    @ResponseBody
     public void setLike(@PathVariable(value = "id") @Positive @NotNull Long id,
                         @PathVariable(value = "userId") @Positive @NotNull Long userId) {
         filmService.setLikes(id, userId);
@@ -67,18 +62,24 @@ public class FilmController {
     }
 
     @GetMapping("/popular")//GET /films/popular?count={count}
-    @ResponseBody
     public List<Film> getPopularFilms(@RequestParam(value = "count", defaultValue = "10", required = false)
                                           @PathVariable(value = "count") @Positive @NotNull Integer count) {
         return filmService.getMostPopular(count);
     }
 
     @GetMapping("/common")
-    @ResponseBody
     public List<Film> getCommonFilms (@RequestParam(value = "userId")
                                      @PathVariable(value = "userId") @Positive @NotNull Long userId,
                                      @RequestParam(value = "friendId")
                                      @PathVariable(value = "friendId") @Positive @NotNull Long friendId){
         return filmService.getCommonFilms(userId, friendId);
     }
+
+    @GetMapping("/director/{directorId}")
+    public List<Film> getDirectorFilmsSortedByParam(@PathVariable(value = "directorId") Long directorId,
+                                                    @RequestParam(value = "sortBy", defaultValue = "likes",
+                                                            required = false) String sortBy){
+        return new ArrayList<>();
+    }
+
 }

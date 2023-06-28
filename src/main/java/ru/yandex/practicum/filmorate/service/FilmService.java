@@ -81,4 +81,6 @@ public class FilmService {
     public List<Film> getCommonFilms(long userId, long friendId){
         return filmDao.getCommonFilms(userId, friendId);
     }
+
+  //  public List<Film>
 }
