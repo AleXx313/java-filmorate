@@ -39,7 +39,7 @@ public class FilmService {
 
     public Film create(Film film) {
         Film newFilm = filmDao.create(film);
-        log.info("Фильм под названием {} с id - {} добавлен!", film.getName(), film.getId());
+        log.info("Фильм под названием {} с id - {} добавлен!", newFilm.getName(), newFilm.getId());
         return newFilm;
     }
 
