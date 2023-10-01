@@ -82,7 +82,7 @@ class FilmorateApplicationTests {
     @Test
     public void shouldAutoFillGenresAndRatings() {
         assertEquals(genreService.getAll().size(), 6);
-        assertEquals(genreService.getById(1).getName(), "Комедия");
+        assertEquals(genreService.getById(1).getName(), "Comedy");
         assertEquals(genreService.getAll().get(0).getId(), 1);
         assertEquals(ratingService.getAll().size(), 5);
         assertEquals(ratingService.getById(1).getName(), "G");
