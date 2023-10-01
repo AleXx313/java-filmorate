@@ -78,3 +78,22 @@ FROM users;
 >LIMIT 5;
 </details>
 </details>
+
+## Установка и запуск
+1. Склонировать
+```shell
+git clone https://github.com/AleXx313/java-filmorate
+```
+2. Перейти в корень проекта через консоль
+3. Собрать проект
+```shell
+mvn clean package
+```
+4. Создайте образ через Docker 
+```shell
+docker build -t java_filmorate_image . 
+```
+5. Запустите через Docker 
+```shell
+docker run --name java_filmorate_container -p 8080:8080 java_filmorate_image
+```
