@@ -12,10 +12,12 @@ Template repository for Filmorate project.
 - познакомился с понятиями Data Transfer Object и Data Access Layout
 - узнал ряд принципов проектирования приложения
 
+
+## База данных
+
 <details>
 <summary>База данных проекта</summary>
 
-## База данных
 ### Диаграмма базы данных (https://dbdiagram.io/d/6467bcc8dca9fb07c469a085)
 ![Диаграмма базы данных](https://github.com/AleXx313/java-filmorate/blob/main/diagrama.png)
 ### Список SELECT запросов к Базе Данных
